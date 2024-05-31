@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人网页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #555;
+        }
+        nav a {
+            color: #fff;
+            padding: 1rem;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background: #444;
+        }
+        .container {
+            padding: 2rem;
+            max-width: 1100px;
+            margin: auto;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 5px solid #333;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>张三的个人网页</h1>
+        <p>全栈开发者 | 技术爱好者 | 博客作者</p>
+    </header>
+    <nav>
+        <a href="#about">关于我</a>
+        <a href="#projects">项目展示</a>
+        <a href="#blog">博客</a>
+        <a href="#contact">联系方式</a>
+    </nav>
+    <div class="container">
+        <section id="about">
+            <h2>关于我</h2>
+            <div class="card">
+                <p>你好！我是张三，一名热爱技术的全栈开发者。我喜欢解决复杂的问题，并且不断学习新技术。我的兴趣包括Web开发、人工智能和数据科学。</p>
+            </div>
+        </section>
+        <section id="projects">
+            <h2>项目展示</h2>
+            <div class="card">
+                <h3>项目一：个人博客</h3>
+                <p>一个用React和Node.js构建的个人博客网站，用户可以发布、编辑和删除博客文章。</p>
+            </div>
+            <div class="card">
+                <h3>项目二：在线商城</h3>
+                <p>一个基于Python和Django的在线商城平台，包含用户认证、购物车和支付功能。</p>
+            </div>
+        </section>
+        <section id="blog">
+            <h2>博客</h2>
+            <div class="card">
+                <h3>如何学习JavaScript</h3>
+                <p>JavaScript是Web开发中非常重要的一门语言。本文介绍了一些学习JavaScript的有效方法和资源。</p>
+            </div>
+            <div class="card">
+                <h3>理解机器学习的基础概念</h3>
+                <p>机器学习是当前非常热门的一个领域。本文解释了一些机器学习的基础概念和常用算法。</p>
+            </div>
+        </section>
+        <section id="contact">
+            <h2>联系方式</h2>
+            <div class="card">
+                <p>邮箱: zhangsan@example.com</p>
+                <p>电话: 123-456-7890</p>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 张三的个人网页</p>
+    </footer>
+</body>
+</html>

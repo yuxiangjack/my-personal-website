@@ -1,1 +1,169 @@
-sdfd
+
+SELECT date,count(*) FROM  ods.test_hr_total_2
+GROUP BY date
+ORDER BY date;
+
+dwd_hr_employee_date
+
+-- DROP TABLE ods.test_hr_total_2;
+CREATE TABLE  ods.test_hr_total_2 as
+with a as(
+SELECT   
+date,sess_level,sess,org_code,company,deptname,dept_code,attribute,position_series,position_group,position_level,gender,age,seniority,diploma,turnover,turnover_reason,political_outlook
+,sum(if(turnover_flag2='最新在职','1','0')) as staff_number
+FROM  cdm.dwd_hr_employee_date
+GROUP BY date,sess_level,sess,org_code,company,deptname,dept_code,attribute,position_series,position_group,position_level,gender,age,seniority,diploma,turnover,turnover_reason,political_outlook
+)
+
+SELECT * FROM ods.test_hr_total_2 a
+LEFT JOIN  ods.test_hr_total b
+
+create TABLE cdm.dwd_hr_employee_date_test as
+SELECT a.*,b.abbreviation FROM cdm.dwd_hr_employee_date a
+LEFT JOIN cdm.dim_hr_employee_org_info b on a.org_code=b.org_code
+
+DROP TABLE IF EXISTS cdm.dwd_hr_employee_date ;
+CREATE TABLE cdm.dwd_hr_employee_date as
+SELECT * FROM cdm.dwd_hr_employee_date_test
+
+
+SELECT * FROM  cdm.dwd_hr_employee_date
+GROUP BY date
+
+-- RDS sql 
+-- ******************************************************************** --
+-- author: shixuefeng
+-- create time: 2024/06/05 21:03:10 GMT+08:00
+-- ******************************************************************** --
+CREATE INDEX idx_sess_company_department ON dwd_hr_employee_date(sess,company,deptname);
+CREATE INDEX idx_attribute ON dwd_hr_employee_date(attribute);
+CREATE INDEX idx_position_series ON dwd_hr_employee_date(position_series);
+CREATE INDEX idx_position_group ON dwd_hr_employee_date(position_group);
+CREATE INDEX idx_position_level ON dwd_hr_employee_date(position_level);
+
+
+-- CREATE TABLE ads.ods.ods.test_pkslow_person_r (
+--     age int not null,
+--     city varchar not null
+-- ) PARTITION BY RANGE (age);
+-- create table pkslow_person_r1 partition of pkslow_person_r for values from (MINVALUE) to (10);
+-- create table pkslow_person_r2 partition of pkslow_person_r for values from (11) to (20);
+-- create table pkslow_person_r3 partition of pkslow_person_r for values from (21) to (30);
+-- create table pkslow_person_r4 partition of pkslow_person_r for values from (31) to (MAXVALUE);
+-- create table ads.tbl_test_partition (a bigint,b text,c timestamp with time zone, constraint pk_a_c primary key(a,c)) partition by range(c);
+ 
+ --***********************************************************************************************************************
+ DROP TABLE IF EXISTS ods.test_pkslow_person_r;
+ CREATE TABLE ods.test_pkslow_person_r (
+    date DATE,
+    age int not null,
+    city varchar not null
+) ;
+insert into ods.test_pkslow_person_r(date,age, city) VALUES (CURRENT_DATE,1, 'GZ');
+
+SELECT * FROM ods.test_pkslow_person_r;
+
+
+
+DELETE FROM  ads.dwd_hr_employee_date 
+WHERE date=current_date;
+insert into ads.dwd_hr_employee_date
+with a as(
+SELECT current_date,pk_dept,pk_psnjob,pk_psndoc,attribute,position_series,usercode,name,gender,birthdate,age,age_flag,seniority,seniority_flag,political_outlook,diploma,studymode,sess_level,sess,org_code,company,abbreviation,deptname,dept_code,turnover,trnstypename,turnover_reason,turnover_flag,turnover_flag2,position_group,position_level
+ FROM cdm.dwd_hr_employee_date;
+)
+
+ 
+DROP TABLE IF EXISTS 
+CREATE TABLE
+	IF NOT EXISTS ads.dwd_hr_employee_date (
+date                         varchar(80) COMMENT '快照日期',
+pk_dept                     varchar(80) COMMENT '部门',
+pk_psnjob                   varchar(80) COMMENT '工作记录任职主键',
+pk_psndoc                   varchar(80) COMMENT '人员',
+attribute                   varchar(50) COMMENT '人员属性',
+position_series             varchar(50) COMMENT '岗位序列',
+usercode                    varchar(200) COMMENT '人员编码',
+name                        varchar(100) COMMENT '姓名',
+gender                      text COMMENT '性别',
+birthdate                   varchar(40) COMMENT '出生日期',
+age                         text COMMENT '年龄段',
+age_flag                    varchar(40) COMMENT '年龄',
+seniority                   text COMMENT '工龄段',
+seniority_flag              varchar(50) COMMENT '工龄',
+political_outlook           varchar(50) COMMENT '政治面貌',
+diploma                     varchar(50) COMMENT '学历',
+studymode                   varchar(50) COMMENT '学习方式',
+sess_level varchar(6) COMMENT '层级',
+sess varchar(20) COMMENT '板块',
+org_code                    varchar(200) COMMENT '公司编码',
+company                     varchar(120) COMMENT '公司名称',
+abbreviation varchar(50) COMMENT '公司简称',
+deptname                    varchar(120) COMMENT '部门名称',
+dept_code                   varchar(160) COMMENT '部门编码',
+turnover                    text COMMENT '人员异动',
+trnstypename                varchar(120) COMMENT '异动类型',
+turnover_reason             varchar(120) COMMENT '异动原因',
+turnover_flag               varchar(50) COMMENT '异动标志',
+turnover_flag2              varchar(50) COMMENT '异动标志2',
+position_group              varchar(50) COMMENT '岗位族群',
+position_level              varchar(50) COMMENT '岗位层级'
+	);
+	
+COMMENT ON TABLE ads.dwd_hr_employee_date IS 'HR板块在职人员明细表';
+
+
+
+DO $$
+BEGIN
+    FOR i IN 1..12 LOOP
+        -- 这里是循环体的开始
+
+        -- EXECUTE 语句用于动态执行 SQL 语句。
+        -- FORMAT 函数用于构建一个动态 SQL 语句，其中 %s 表示格式化字符串，%L 表示格式化日期值。
+        EXECUTE FORMAT(
+            'CREATE TABLE sales_data_partition_%s PARTITION OF sales_data_partitioned FOR VALUES FROM (%L) TO (%L)',
+            i,
+            DATE_TRUNC('month', CURRENT_DATE) + (i - 1) * INTERVAL '1 month', -- 当前月份 + (i - 1) 个月
+            DATE_TRUNC('month', CURRENT_DATE) + i * INTERVAL '1 month' -- 当前月份 + i 个月
+        );
+
+        -- 这里是循环体的结束
+    END LOOP;
+END $$;
+--**************************************************************************************************
+ DO $$
+BEGIN
+    FOR i IN 1..12 LOOP
+        -- 这里是循环体的开始
+
+        -- EXECUTE 语句用于动态执行 SQL 语句。
+        -- FORMAT 函数用于构建一个动态 SQL 语句，其中 %s 表示格式化字符串，%L 表示格式化日期值。
+        EXECUTE FORMAT(
+            'CREATE TABLE sales_data_partition_%s PARTITION OF sales_data_partitioned FOR VALUES FROM (%L) TO (%L)',
+            i,
+            DATE_TRUNC('month', CURRENT_DATE) + (i - 1) * INTERVAL '1 month', -- 当前月份 + (i - 1) 个月
+            DATE_TRUNC('month', CURRENT_DATE) + i * INTERVAL '1 month' -- 当前月份 + i 个月
+        );
+
+        -- 这里是循环体的结束
+    END LOOP;
+END $$;
+
+
+--*************************************************************************************************************************
+DO $$
+BEGIN
+    FOR year IN 2019..2022 LOOP
+        FOR month IN 1..12 LOOP
+            EXECUTE FORMAT(
+                'CREATE TABLE sales_data_partition_%s_%s PARTITION OF sales_data_partitioned FOR VALUES FROM (%L) TO (%L)',
+                year,
+                month,
+                DATE_TRUNC('month', TO_DATE(year || '-' || month || '-01', 'YYYY-MM-DD')),
+                DATE_TRUNC('month', TO_DATE(year || '-' || (month + 1) || '-01', 'YYYY-MM-DD'))
+            );
+        END LOOP;
+    END LOOP;
+END $$;
+在这个例子中，我们使用了两个嵌套的循环。外部循环遍历了多个年份（从 2019 年到 2022 年），内部循环遍历了每个年份的 12 个月。这样就可以动态地创建多个年份的所有月份的分区表。
